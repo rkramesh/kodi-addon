@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+  <category label="General">
+    <setting id="quality" type="enum" values="SD and HD|SD only|HD only"
+             label="Quality" default="0" />
+    <setting id="itemcount" type="labelenum" values="25|50|100"
+        label="The number of recent episodes" default = "50"/>
+    <setting id="ignore_weak" type="bool"
+             label="Hide torrents with few seeds" default="false" />
+    <setting id="min_seeders" type="number"
+             label="Minimal seeds number" default="10" enable="eq(-1,true)" />
+    <setting id="thread_count" type="labelenum" values="1|2|3|4|5|6|7|8"
+             label="# of threads when processing TheTVDB info" default="4" />
+    <setting type="action"
+             label="Clear cache" action="RunScript($CWD/libs/commands.py,clear_cache)" />
+    <setting type="action"
+             label="Clear all the plugin data" action="RunScript($CWD/libs/commands.py,clear_data)" />
+  </category>
+  <category label="Download">
+      <setting id="download_dir" type="folder"
+           label="Base download folder" default="" />
+      <setting id="enable_autodownload" type="bool"
+           label="Enable automatic episode download" default="true" />
+  </category>
+</settings>

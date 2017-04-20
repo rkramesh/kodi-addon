@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="plugin.video.rk.tv"
+version="3.6.1"
+name="Rk TV Shows"
+provider-name="Rk">
+<requires>
+  <import addon="xbmc.python" version="2.19.0"/>
+  <import addon="script.module.requests" version="2.6.0"/>
+  <import addon="script.module.simpleplugin" version="2.0.0" />
+  <import addon="script.module.pyxbmct" version="1.1.0" />
+  <import addon="plugin.video.yatp" version="3.1.0" />
+</requires>
+<extension point="xbmc.python.pluginsource" library="main.py">
+  <provides>video</provides>
+</extension>
+<extension point="xbmc.service" library="service.py" start="[login|startup]"/>
+<extension point="xbmc.addon.metadata">
+  <summary lang="en">RkTV Shows</summary>
+  <description lang="en">A video plugin for playing TV-show torrents from Rk.</description>
+</extension>
+</addon>
