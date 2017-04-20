@@ -38,7 +38,15 @@ def get_token():
 def load_torrents(params):
    mdata=[]
    print 'Started fetching details..'
-   url='http://tamilrockers.mx'
+   if params['qlty'] == 'hd':
+      url='http://tamilrockers.im'
+   elif params['qlty'] == 'dub':
+      url='http://tamilrockers.im'
+   elif params['qlty'] == 'dub':
+      url='http://tamilrockers.im'
+   else:
+      url='http://tamilrockers.im'
+   print url 
    try:
      response = requests.get(url,
                                   headers={'User-agent': 'Mozilla/5.0 (Windows NT '
@@ -99,6 +107,4 @@ def load_torrents(params):
 #   response={}
 #   response['torrent_results']=rk
 #   return response['torrent_results']
-   print '{;'*50
-   print soup.title
    return rkr

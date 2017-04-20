@@ -181,7 +181,7 @@ def deduplicate_torrents(torrents):
         if (torrent.get('episode_info') is None or
                     torrent['episode_info'].get('tvdb') is None or
                     torrent['episode_info'].get('imdb') is None):
-            continue  # Skip an item if it's missing from IMDB or TheTVDB
+            continue  # Skip an it	````````em if it's missing from IMDB or TheTVDB
         if torrent['episode_info'].get('seasonnum') is None or torrent['episode_info'].get('epnum') is None:
             try:
                 episode_data = parse_torrent_name(torrent['title'].lower())
@@ -226,11 +226,17 @@ def get_torrents(mode, search_string='', search_imdb='', limit='', show_info=Tru
         rarbg_query['search_string'] = search_string
     if search_imdb:
         rarbg_query['search_imdb'] = search_imdb
+    if episode_info == 'hd':
+        rarbg_query['qlty'] = 'hd'
+    elif episode_info == 'dub':
+        rarbg_query['qlty'] = 'dub'
+    else:
+        rarbg_query['qlty'] = 'other'
     if limit:
         rarbg_query['limit'] = limit
     else:
         rarbg_query['limit'] = plugin.itemcount
-    rarbg_query={'category': '18;41', 'limit': '50', 'mode': 'list','format': 'json_extended'}
+    #rarbg_query={'category': '18;41', 'limit': '50', 'mode': 'list','format': 'json_extended'}
     try:
         #raw_torrents = rarbg.load_torrents(rarbg_query)
         torrents = rarbg.load_torrents(rarbg_query)

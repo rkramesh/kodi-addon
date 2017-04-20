@@ -218,8 +218,14 @@ def root():
         'fanart': plugin.fanart,
         'url': plugin.get_url(action='my_shows'),
        },
-       {'label': 'TamilRockers]',
-        'thumb': os.path.join(icons, 'tv.png'),
+       {'label': 'TamilHD',
+        'thumb': os.path.join(icons, 'hd.jpg'),
+        'icon': tv_icon,
+        'fanart': plugin.fanart,
+        'url': plugin.get_url(action='hdepisodes', mode='list'),
+        },
+       {'label': 'TamilRockers',
+        'thumb': os.path.join(icons, 'tr.jpg'),
         'icon': tv_icon,
         'fanart': plugin.fanart,
         'url': plugin.get_url(action='episodes', mode='list'),
@@ -241,6 +247,25 @@ def root():
     return plugin.create_listing(listing, category='Rarbg TV Shows')
 
 
+@plugin.action()
+def hdepisodes(params):
+    """
+    Show the list of recent episodes
+    """
+    myshows = params.get('myshows', False)
+    listing = _list_torrents(
+        get_torrents(params['mode'],
+                     search_imdb=params.get('search_imdb', ''),
+                     episode_info='hd'),
+        myshows=myshows)
+    if myshows:
+        content = 'episodes'
+        sort_methods = (xbmcplugin.SORT_METHOD_EPISODE,)
+    else:
+        content = ''
+        sort_methods = ()
+    return plugin.create_listing(listing, content=content, sort_methods=sort_methods,
+                                 category='Rarbg: Recent Episodes')
 @plugin.action()
 def episodes(params):
     """
