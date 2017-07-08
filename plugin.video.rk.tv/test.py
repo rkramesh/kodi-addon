@@ -5,9 +5,14 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import urllib2
+import sqlite3
 mdata=[]
 tdata=[]
 def load_torrents(url):
+
+   mdata=[]
+   conn = sqlite3.connect('tr-torrent.db')
+   print "Opened database successfully";
    print 'Started fetching details..'
 #   mdata= [u'http://tamilrockers.im/index.php/topic/53443-risen-20161080p-bdrip-original-audio-dd51-384kbps-tamil-eng-x264-25gb-esubs/', u'http://tamilrockers.im/index.php/topic/53389-', u'http://tamilrockers.im/index.php/topic/53303-', u'http://tamilrockers.im/index.php/topic/53385-', u'http://tamilrockers.im/index.php/topic/53267-', u'http://tamilrockers.im/index.php/topic/53258-', u'http://tamilrockers.im/index.php/topic/53269-', u'http://tamilrockers.im/index.php/topic/53263-', u'http://tamilrockers.im/index.php/topic/53102-', u'http://tamilrockers.im/index.php/topic/53098-', u'http://tamilrockers.im/index.php/topic/53101-']
    try:
@@ -51,20 +56,31 @@ def load_torrents(url):
                                                           'Gecko) Chrome/37.0.2062.'
                                                           '120 Safari/537.36'})
            soup = bs4.BeautifulSoup(response.content, "html.parser")
+           try:
 
-           tamilmagnet=soup.find('a', href=re.compile('magnet'))['href'] 
+               tamilmagnet=soup.find('a', href=re.compile('magnet'))['href'] 
          #  print soup.find('p', src=re.compile('/images/'))['href'] 
-           data['category']='TV HD Episodes'
-           data['leechers']=20
-           data['seeders']=30
-           data['ranked']=1
-           data['pubdate']='2017-04-16 14:40:19 +0000' 
-           data['title']=soup.title.text
+               rk= re.findall(r'\d+',i)
+               data['tid']=rk[0]
+               data['category']='BLUE RAY VIDEOS'
+               data['leechers']=20
+               data['seeders']=30
+               data['ranked']=1
+               data['pubdate']='2017-04-16 14:40:19 +0000' 
+               data['title']=soup.title.text
 #           print soup.title.text
-	   data['download']=tamilmagnet
-           data['info_page']='http://test.rk.com'
-           data['episode_info']={'tvdb': '83051', 'tvrage': None, 'imdb': 'tt1128727', 'themoviedb': '12775'}
-           data['size']=467749940
-           rk.append(data.copy()) 
+	       data['download']=tamilmagnet
+               data['info_page']='http://test.rk.com'
+               data['episode_info']="{'tvdb': '83051', 'tvrage': None, 'imdb': 'tt1128727', 'themoviedb': '12775'}"
+               data['size']=467749940
+               row= [ data['tid'],data['category'],data['leechers'],data['seeders'],data['ranked'],data['pubdate'],data['title'],data['download'],data['info_page'],data['episode_info'],data['size'] ]
+               query="INSERT INTO TROCKER VALUES (null,?,?,?,?,?,?,?,?,?,?,?)"
+               conn.execute(query,row)
+               conn.commit()
+
+               rk.append(data.copy()) 
+           except Exception as e:
+                 print e
    print rk
+   conn.close()
 load_torrents('http://tamilrockers.im/index.php/forum/116-tamil-bluray-hd-movies')

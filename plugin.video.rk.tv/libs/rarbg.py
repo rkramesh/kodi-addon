@@ -102,6 +102,7 @@ def load_torrents(params):
 #           data['episode_info']={'tvdb': '83051', 'tvrage': None, 'imdb': 'tt1128727', 'themoviedb': '12775'}
            data['episode_info']={'title': 'Strife on Mars', 'tvdb': '281630', u'airdate': u'2017-04-17', u'epnum': u'22', u'seasonnum': u'3', u'imdb': u'tt3514324', u'themoviedb': u'60797', u'tvrage': u'40717'} 
            data['size']=467749940
+           print data
            rkr.append(data.copy())
 
 #   response={}
