@@ -43,8 +43,10 @@ def _set_info(list_item, torrent, myshows=False):
     torrent['show_info'] = None
     #torrent['tvdb_episode_info'] = None
     if torrent.get('episode_info'):
-        video['season'] = int(torrent['episode_info']['seasonnum'])
-        video['episode'] = int(torrent['episode_info']['epnum'])
+#        video['season'] = int(torrent['episode_info']['seasonnum'])
+        video['season'] = 3
+#        video['episode'] = int(torrent['episode_info']['epnum'])
+        video['episode'] = 5
     if torrent.get('show_info') is not None:
         video['genre'] = torrent['show_info'].get('Genre', '').lstrip('|').rstrip('|').replace('|', ', ')
         video['cast'] = torrent['show_info'].get('Actors', '').lstrip('|').rstrip('|').split('|')
@@ -186,7 +188,8 @@ def _list_torrents(torrents, myshows=False):
                                      ('Add autodownload filter',
                                       u'RunScript({commands},add_filter,{tvdb},{show_title})'.format(
                                           commands=commands,
-                                          tvdb=torrent['episode_info']['tvdb'],
+#                                          tvdb=torrent['episode_info']['tvdb'],
+                                          tvdb=25,
                                           show_title=show_title)
                                       )]
         if myshows:
@@ -202,7 +205,8 @@ def _list_torrents(torrents, myshows=False):
             list_item['context_menu'].append(('Add to "My shows"...',
                                               'RunScript({commands},myshows_add,{tvdb})'.format(
                                                   commands=commands,
-                                                  tvdb=torrent['episode_info']['tvdb'])))
+                                                  tvdb=20)))
+#                                                  tvdb=torrent['episode_info']['tvdb'])))
         yield list_item
 
 

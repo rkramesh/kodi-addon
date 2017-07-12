@@ -248,5 +248,4 @@ def get_torrents(mode, search_string='', search_imdb='', limit='', show_info=Tru
         #torrents = deduplicate_torrents(raw_torrents)
         #if show_info:
         #    torrents = add_tvdb_info(torrents, episode_info)
-
         return torrents

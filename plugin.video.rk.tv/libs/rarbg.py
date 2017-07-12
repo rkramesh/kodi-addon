@@ -12,7 +12,7 @@ import os, re
 import bs4,time
 import requests
 from bs4 import BeautifulSoup
-import re
+import re,sqlite3
 import urllib2
 
 __all__ = ['load_torrents']
@@ -74,38 +74,52 @@ def load_torrents(params):
 #                mdata.append(rk['href'])
                 pass
 
-   print 'Fetching details..Completed!'
+   print 'Fetching details..Completed--!'
 #   for i in mdata: print i
    data={}
    rkr=[]
+   conn = sqlite3.connect('tr-torrent.db')
+   cur = conn.cursor()
    for i in mdata:
-      r = requests.get(i)
-      print '\n'+r.url+'\n' 
-      if r.status_code == 200:
-           response = requests.get(r.url,
-                                   headers={'User-agent': 'Mozilla/5.0 (Windows NT '
-                                                          '6.2; WOW64) AppleWebKit/'
-                                                          '537.36 (KHTML, like '
-                                                          'Gecko) Chrome/37.0.2062.'
-                                                          '120 Safari/537.36'})
-           soup = bs4.BeautifulSoup(response.content, "html.parser")
-           tamilmagnet=soup.find('a', href=re.compile('magnet'))['href']
-           data['category']='TV HD Episodes'
-           data['leechers']=20
-           data['seeders']=30
-           data['ranked']=1
-           data['pubdate']='2017-04-16 14:40:19 +0000'
-           data['title']=soup.title.text
-           data['download']=tamilmagnet
-           data['info_page']='http://test.rk.com'
-           #data['show_info']=None
+      tid=int(re.findall('\d+',i)[0])
+      cur.execute("select id from TROCKER where tid=?", (tid,))
+      duptid = cur.fetchall()
+      if duptid :
+        pass
+      else:
+        r = requests.get(i)
+#        print '\n'+r.url+'\n' 
+        if r.status_code == 200:
+             response = requests.get(r.url,
+                                     headers={'User-agent': 'Mozilla/5.0 (Windows NT '
+                                                            '6.2; WOW64) AppleWebKit/'
+                                                            '537.36 (KHTML, like '
+                                                            'Gecko) Chrome/37.0.2062.'
+                                                            '120 Safari/537.36'})
+             soup = bs4.BeautifulSoup(response.content, "html.parser")
+             tamilmagnet=soup.find('a', href=re.compile('magnet'))['href']
+             data['tid']=tid
+             data['category']='TV HD Episodes'
+             data['leechers']=20
+             data['seeders']=30
+             data['ranked']=1
+             data['pubdate']='2017-04-16 14:40:19 +0000'
+             data['title']=soup.title.text
+             data['download']=tamilmagnet
+             data['info_page']='http://test.rk.com'
+             #data['show_info']=None
 #           data['episode_info']={'tvdb': '83051', 'tvrage': None, 'imdb': 'tt1128727', 'themoviedb': '12775'}
-           data['episode_info']={'title': 'Strife on Mars', 'tvdb': '281630', u'airdate': u'2017-04-17', u'epnum': u'22', u'seasonnum': u'3', u'imdb': u'tt3514324', u'themoviedb': u'60797', u'tvrage': u'40717'} 
-           data['size']=467749940
-           print data
-           rkr.append(data.copy())
+             data['episode_info']="{'title': 'Strife on Mars', 'tvdb': '281630', u'airdate': u'2017-04-17', u'epnum': u'22', u'seasonnum': u'3', u'imdb': u'tt3514324', u'themoviedb': u'60797', u'tvrage': u'40717'}"
+             data['size']=467749940
+             row= [ data['tid'],data['category'],data['leechers'],data['seeders'],data['ranked'],data['pubdate'],data['title'],data['download'],data['info_page'],data['episode_info'],data['size'] ]
+             query="INSERT INTO TROCKER VALUES (null,?,?,?,?,?,?,?,?,?,?,?)"
+             conn.execute(query,row)
+             conn.commit()
+
+             rkr.append(data.copy())
 
 #   response={}
 #   response['torrent_results']=rk
 #   return response['torrent_results']
+   print 'This is complete' 
    return rkr
