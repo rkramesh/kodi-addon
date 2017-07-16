@@ -37,7 +37,7 @@ def get_token():
 @plugin.cached(15)
 def load_torrents(params):
    mdata=[]
-   print 'Started fetching details..'
+   plugin.log_warning ('Started fetching details..')
    if params['qlty'] == 'hd':
       url='http://tamilrockers.im'
    elif params['qlty'] == 'dub':
@@ -46,7 +46,6 @@ def load_torrents(params):
       url='http://tamilrockers.im'
    else:
       url='http://tamilrockers.im'
-   print url 
    try:
      response = requests.get(url,
                                   headers={'User-agent': 'Mozilla/5.0 (Windows NT '
@@ -64,21 +63,23 @@ def load_torrents(params):
                  pass
              elif rk.text.startswith('['):
                   if '1080' in rk.text or '720' in rk.text:
-  #                  print ('   {}({})'.format(rk.text,rk['href']))
+  #                  plugin.log_warning ('   {}({})'.format(rk.text,rk['href']))
                      mdata.append(rk['href'])
              elif rk.text ==('More'):
                  pass
              else:
-  #              print ('{}'.format(rk.text.split('[')[0]))
-  #              print ('   {}({})'.format(rk.text.split('[')[-1],rk['href']))
+  #              plugin.log_warning ('{}'.format(rk.text.split('[')[0]))
+  #              plugin.log_warning ('   {}({})'.format(rk.text.split('[')[-1],rk['href']))
 #                mdata.append(rk['href'])
                 pass
 
-   print 'Fetching details..Completed--!'
-#   for i in mdata: print i
+   plugin.log_warning ('Fetching details..Completed--!')
+#   for i in mdata: plugin.log_warning i
    data={}
    rkr=[]
-   conn = sqlite3.connect('tr-torrent.db')
+   print (os.getcwd())
+   conn = sqlite3.connect('/home/osmc/tr-torrent.db')
+   print conn
    cur = conn.cursor()
    for i in mdata:
       tid=int(re.findall('\d+',i)[0])
@@ -88,38 +89,48 @@ def load_torrents(params):
         pass
       else:
         r = requests.get(i)
-#        print '\n'+r.url+'\n' 
-        if r.status_code == 200:
-             response = requests.get(r.url,
-                                     headers={'User-agent': 'Mozilla/5.0 (Windows NT '
-                                                            '6.2; WOW64) AppleWebKit/'
-                                                            '537.36 (KHTML, like '
-                                                            'Gecko) Chrome/37.0.2062.'
-                                                            '120 Safari/537.36'})
-             soup = bs4.BeautifulSoup(response.content, "html.parser")
-             tamilmagnet=soup.find('a', href=re.compile('magnet'))['href']
-             data['tid']=tid
-             data['category']='TV HD Episodes'
-             data['leechers']=20
-             data['seeders']=30
-             data['ranked']=1
-             data['pubdate']='2017-04-16 14:40:19 +0000'
-             data['title']=soup.title.text
-             data['download']=tamilmagnet
-             data['info_page']='http://test.rk.com'
-             #data['show_info']=None
-#           data['episode_info']={'tvdb': '83051', 'tvrage': None, 'imdb': 'tt1128727', 'themoviedb': '12775'}
-             data['episode_info']="{'title': 'Strife on Mars', 'tvdb': '281630', u'airdate': u'2017-04-17', u'epnum': u'22', u'seasonnum': u'3', u'imdb': u'tt3514324', u'themoviedb': u'60797', u'tvrage': u'40717'}"
-             data['size']=467749940
-             row= [ data['tid'],data['category'],data['leechers'],data['seeders'],data['ranked'],data['pubdate'],data['title'],data['download'],data['info_page'],data['episode_info'],data['size'] ]
-             query="INSERT INTO TROCKER VALUES (null,?,?,?,?,?,?,?,?,?,?,?)"
-             conn.execute(query,row)
-             conn.commit()
+        print '\n'+r.url+'\n' 
+        try:
+           if r.status_code == 200:
+                response = requests.get(r.url,
+                                        headers={'User-agent': 'Mozilla/5.0 (Windows NT '
+                                                               '6.2; WOW64) AppleWebKit/'
+                                                               '537.36 (KHTML, like '
+                                                               'Gecko) Chrome/37.0.2062.'
+                                                               '120 Safari/537.36'})
+                soup = bs4.BeautifulSoup(response.content, "html.parser")
+                tamilmagnet=soup.find('a', href=re.compile('magnet'))['href']
+                data['tid']=tid
+                data['category']='TV HD Episodes'
+                data['leechers']=20
+                data['seeders']=30
+                data['ranked']=1
+                data['pubdate']=time.ctime()
+                data['title']=soup.title.text
+                data['download']=tamilmagnet
+                data['info_page']='http://test.rk.com'
+                #data['show_info']=None
+   #           data['episode_info']={'tvdb': '83051', 'tvrage': None, 'imdb': 'tt1128727', 'themoviedb': '12775'}
+                data['episode_info']="{'title': 'Strife on Mars', 'tvdb': '281630', u'airdate': u'2017-04-17', u'epnum': u'22', u'seasonnum': u'3', u'imdb': u'tt3514324', u'themoviedb': u'60797', u'tvrage': u'40717'}"
+                data['size']=467749940
+                row= [ data['tid'],data['category'],data['leechers'],data['seeders'],data['ranked'],data['pubdate'],data['title'],data['download'],data['info_page'],data['episode_info'],data['size'] ]
+                query="INSERT INTO TROCKER VALUES (null,?,?,?,?,?,?,?,?,?,?,?)"
+                conn.execute(query,row)
+                conn.commit()
+   
+  #              rkr.append(data.copy())
+        except Exception,e:
+            print e  
 
-             rkr.append(data.copy())
+   plugin.log_warning ('This is complete') 
+   def dict_factory(cursor, row):
+       d = {}
+       for idx, col in enumerate(cursor.description):
+          d[col[0].lower()] = row[idx]
+       return d
 
-#   response={}
-#   response['torrent_results']=rk
-#   return response['torrent_results']
-   print 'This is complete' 
+   conn.row_factory = dict_factory
+   cur = conn.cursor()
+   cur.execute("select * from TROCKER")
+   rkr = cur.fetchall()
    return rkr
