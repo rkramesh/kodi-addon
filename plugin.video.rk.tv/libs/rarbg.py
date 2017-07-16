@@ -11,6 +11,7 @@ from rarbg_exceptions import RarbgApiError
 import os, re
 import bs4,time
 import requests
+import xbmcvfs
 from bs4 import BeautifulSoup
 import re,sqlite3
 import urllib2
@@ -78,7 +79,11 @@ def load_torrents(params):
    data={}
    rkr=[]
    print (os.getcwd())
-   conn = sqlite3.connect('/home/osmc/tr-torrent.db')
+   folders, files = xbmcvfs.listdir(plugin.config_dir)
+   path = os.path.join(plugin.config_dir, 'tr-torrent.db')
+   print path
+   print '#$'*100
+   conn = sqlite3.connect(path)
    print conn
    cur = conn.cursor()
    for i in mdata:

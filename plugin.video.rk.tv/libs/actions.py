@@ -158,7 +158,7 @@ def _list_torrents(torrents, myshows=False):
             seeders = str(torrent['seeders'])
         list_item = {'label': '{title} [COLOR=gray]({size}MB|S:{seeders}/L:{leechers})[/COLOR]'.format(
                                 title=torrent['title'],
-                                size=torrent['size'] / 1048576,
+                                size=int(torrent['size']) / 1048576,
                                 seeders=seeders,
                                 leechers=torrent['leechers']),
                      'url': plugin.get_url(action='play', torrent=torrent['download']),

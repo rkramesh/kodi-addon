@@ -16,6 +16,6 @@ provider-name="Rk">
 <extension point="xbmc.service" library="service.py" start="[login|startup]"/>
 <extension point="xbmc.addon.metadata">
   <summary lang="en">RkTV Shows</summary>
-  <description lang="en">A video plugin for playing TV-show torrents from Rk.</description>
+  <description lang="en">A video plugin for playing TV-show torrents from TamilRockers</description>
 </extension>
 </addon>
