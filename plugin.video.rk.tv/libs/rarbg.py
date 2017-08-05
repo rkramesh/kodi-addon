@@ -116,7 +116,7 @@ def load_torrents(params):
                 data['info_page']='http://test.rk.com'
                 #data['show_info']=None
    #           data['episode_info']={'tvdb': '83051', 'tvrage': None, 'imdb': 'tt1128727', 'themoviedb': '12775'}
-                data['episode_info']="{'title': 'Strife on Mars', 'tvdb': '281630', u'airdate': u'2017-04-17', u'epnum': u'22', u'seasonnum': u'3', u'imdb': u'tt3514324', u'themoviedb': u'60797', u'tvrage': u'40717'}"
+                data['episode_info']="{'title': 'Strife on Mars', 'tvdb': '281630', u'airdate': "+time.ctime()+", u'epnum': u'22', u'seasonnum': u'3', u'imdb': u'tt3514324', u'themoviedb': u'60797', u'tvrage': u'40717'}"
                 data['size']=467749940
                 row= [ data['tid'],data['category'],data['leechers'],data['seeders'],data['ranked'],data['pubdate'],data['title'],data['download'],data['info_page'],data['episode_info'],data['size'] ]
                 query="INSERT INTO TROCKER VALUES (null,?,?,?,?,?,?,?,?,?,?,?)"
@@ -125,7 +125,7 @@ def load_torrents(params):
    
   #              rkr.append(data.copy())
         except Exception,e:
-            print e  
+            plugin.log_warning (e) 
 
    plugin.log_warning ('This is complete') 
    def dict_factory(cursor, row):
@@ -136,6 +136,6 @@ def load_torrents(params):
 
    conn.row_factory = dict_factory
    cur = conn.cursor()
-   cur.execute("select * from TROCKER")
+   cur.execute("select * from TROCKER order by ID desc")
    rkr = cur.fetchall()
    return rkr
