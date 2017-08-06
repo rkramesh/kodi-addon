@@ -234,7 +234,7 @@ def root():
         'fanart': plugin.fanart,
         'url': plugin.get_url(action='episodes', mode='list'),
         },
-       {'label': '[Search TV torrents...]',
+       {'label': '[Search torrents...]',
         'thumb': os.path.join(icons, 'search.png'),
         'icon': os.path.join(icons, 'search.png'),
         'fanart': plugin.fanart,

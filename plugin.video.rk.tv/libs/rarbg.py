@@ -78,13 +78,9 @@ def load_torrents(params):
 #   for i in mdata: plugin.log_warning i
    data={}
    rkr=[]
-   print (os.getcwd())
    folders, files = xbmcvfs.listdir(plugin.config_dir)
    path = os.path.join(plugin.config_dir, 'tr-torrent.db')
-   print path
-   print '#$'*100
    conn = sqlite3.connect(path)
-   print conn
    cur = conn.cursor()
    for i in mdata:
       tid=int(re.findall('\d+',i)[0])
@@ -94,7 +90,7 @@ def load_torrents(params):
         pass
       else:
         r = requests.get(i)
-        print '\n'+r.url+'\n' 
+#        print '\n'+r.url+'\n' 
         try:
            if r.status_code == 200:
                 response = requests.get(r.url,
@@ -122,7 +118,6 @@ def load_torrents(params):
                 query="INSERT INTO TROCKER VALUES (null,?,?,?,?,?,?,?,?,?,?,?)"
                 conn.execute(query,row)
                 conn.commit()
-   
   #              rkr.append(data.copy())
         except Exception,e:
             plugin.log_warning (e) 
@@ -136,6 +131,9 @@ def load_torrents(params):
 
    conn.row_factory = dict_factory
    cur = conn.cursor()
-   cur.execute("select * from TROCKER order by ID desc")
+   if params.get('search_string'):
+      cur.execute("select * from TROCKER where title like '%"+params['search_string' ]+"%'order by ID desc")
+   else:
+     cur.execute("select * from TROCKER order by ID desc")
    rkr = cur.fetchall()
    return rkr
