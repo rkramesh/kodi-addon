@@ -171,7 +171,6 @@ def _list_torrents(torrents, myshows=False):
                      'url': plugin.get_url(action='play', torrent=torrent['download']),
                      'is_playable': True,
                      }
-        print list_item
         _set_info(list_item, torrent, myshows)
         _set_art(list_item, torrent, myshows)
         _set_stream_info(list_item, torrent)
@@ -233,13 +232,19 @@ def root():
         'thumb': os.path.join(icons, 'hd.jpg'),
         'icon': tv_icon,
         'fanart': plugin.fanart,
-        'url': plugin.get_url(action='hdepisodes', mode='list'),
+        'url': plugin.get_url(action='hdepisodes', qlty='1080p', mode='list'),
+        },
+       {'label': 'TamilHD-720',
+        'thumb': os.path.join(icons, 'hd.jpg'),
+        'icon': tv_icon,
+        'fanart': plugin.fanart,
+        'url': plugin.get_url(action='hdepisodes', qlty='720p', mode='list'),
         },
        {'label': 'TamilRockers',
         'thumb': os.path.join(icons, 'tr.jpg'),
         'icon': tv_icon,
         'fanart': plugin.fanart,
-        'url': plugin.get_url(action='episodes', mode='list'),
+        'url': plugin.get_url(action='episodes', qlty='all', mode='list'),
         },
        {'label': '[Search torrents...]',
         'thumb': os.path.join(icons, 'search.png'),
