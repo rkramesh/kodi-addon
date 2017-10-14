@@ -58,9 +58,6 @@ def load_torrents(params):
      soup = bs4.BeautifulSoup(response.content, "html.parser")
    except:
      response.status_code == 300
-   print '**&&'*50
-   print response
-   print '**&&'*50
    if "blocked as per instructions" in response.content :
         xbmcgui.Dialog().notification('Rarbg', 'The URL has been blocked as per the instructions of Government Authority', 'error', 3000)
    if response.status_code == 200 and "blocked as per instructions" not in response.content  :
@@ -80,7 +77,6 @@ def load_torrents(params):
                 pass
 
    plugin.log_warning ('Fetching details..Completed--!')
-#   for i in mdata: plugin.log_warning i
    data={}
    rkr=[]
    folders, files = xbmcvfs.listdir(plugin.config_dir)
@@ -95,7 +91,6 @@ def load_torrents(params):
         pass
       else:
         r = requests.get(i)
-#        print '\n'+r.url+'\n' 
         try:
            if r.status_code == 200:
                 response = requests.get(r.url,
@@ -114,7 +109,7 @@ def load_torrents(params):
                 data['pubdate']=time.ctime()
                 data['title']=soup.title.text
                 data['download']=tamilmagnet
-                data['info_page']='http://test.rk.com'
+                data['info_page']=plugin.get_setting('tr-name')
                 #data['show_info']=None
    #           data['episode_info']={'tvdb': '83051', 'tvrage': None, 'imdb': 'tt1128727', 'themoviedb': '12775'}
                 data['episode_info']="{'title': 'Strife on Mars', 'tvdb': '281630', u'airdate': "+time.ctime()+", u'epnum': u'22', u'seasonnum': u'3', u'imdb': u'tt3514324', u'themoviedb': u'60797', u'tvrage': u'40717'}"

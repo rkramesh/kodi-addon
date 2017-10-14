@@ -49,7 +49,10 @@ def _set_info(list_item, torrent, myshows=False):
         video['season'] = 3
 #        video['episode'] = int(torrent['episode_info']['epnum'])
         video['episode'] = 5
-        video['plot'] = video['plotoutline'] = 'This torrent is downloaded from '+plugin.get_setting('tr-name')+' on '+now.strftime("%Y-%m-%d %H:%M")
+        if video.has_key('plot'):
+            pass
+        else:
+            video['plot'] = video['plotoutline'] = 'This torrent is downloaded from '+plugin.get_setting('tr-name')+' on '+torrent['pubdate']
 
     if torrent.get('show_info') is not None:
         video['genre'] = torrent['show_info'].get('Genre', '').lstrip('|').rstrip('|').replace('|', ', ')
