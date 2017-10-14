@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 import os, re
 import bs4,time
 import requests
