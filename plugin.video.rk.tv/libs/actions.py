@@ -16,6 +16,8 @@ from torrent_info import get_torrents
 import tvdb
 from gui import FilterList
 from autodownloader import load_filters, save_filters
+import datetime
+now = datetime.datetime.now()
 
 
 __all__ = ['plugin']
@@ -47,6 +49,8 @@ def _set_info(list_item, torrent, myshows=False):
         video['season'] = 3
 #        video['episode'] = int(torrent['episode_info']['epnum'])
         video['episode'] = 5
+        video['plot'] = video['plotoutline'] = 'This torrent is downloaded from '+plugin.get_setting('tr-name')+' on '+now.strftime("%Y-%m-%d %H:%M")
+
     if torrent.get('show_info') is not None:
         video['genre'] = torrent['show_info'].get('Genre', '').lstrip('|').rstrip('|').replace('|', ', ')
         video['cast'] = torrent['show_info'].get('Actors', '').lstrip('|').rstrip('|').split('|')
