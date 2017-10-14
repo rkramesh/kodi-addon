@@ -15,6 +15,7 @@ import xbmcvfs
 from bs4 import BeautifulSoup
 import re,sqlite3
 import urllib2
+import xbmcgui
 
 __all__ = ['load_torrents']
 
@@ -38,15 +39,15 @@ def get_token():
 @plugin.cached(15)
 def load_torrents(params):
    mdata=[]
-   plugin.log_warning ('Started fetching details..')
+   plugin.log_warning ('Started fetching details for '+plugin.get_setting('tr-name'))
    if params['qlty'] == 'hd':
-      url='http://tamilrockers.im'
+      url=plugin.get_setting('tr-name')
    elif params['qlty'] == 'dub':
-      url='http://tamilrockers.im'
+      url=plugin.get_setting('tr-name')
    elif params['qlty'] == 'dub':
-      url='http://tamilrockers.im'
+      url=plugin.get_setting('tr-name')
    else:
-      url='http://tamilrockers.im'
+      url=plugin.get_setting('tr-name')
    try:
      response = requests.get(url,
                                   headers={'User-agent': 'Mozilla/5.0 (Windows NT '
@@ -57,8 +58,12 @@ def load_torrents(params):
      soup = bs4.BeautifulSoup(response.content, "html.parser")
    except:
      response.status_code == 300
-   if response.status_code == 200:
-#     for tag in (soup.find_all('div',{'class':re.compile('ipsPad')})):
+   print '**&&'*50
+   print response
+   print '**&&'*50
+   if "blocked as per instructions" in response.content :
+        xbmcgui.Dialog().notification('Rarbg', 'The URL has been blocked as per the instructions of Government Authority', 'error', 3000)
+   if response.status_code == 200 and "blocked as per instructions" not in response.content  :
          for rk in soup.findAll(re.compile('.'),{'class':re.compile('.')}):
              if rk.get('href') == None or rk.text == '':
                  pass

@@ -138,7 +138,8 @@ def filter_torrents():
     filters = load_filters()
     with addon.get_storage('downloaded_episodes.pcl') as downloaded_episodes:
         for torrent in torrents:
-            tvdb = torrent['episode_info']['tvdb']
+            #tvdb = torrent['episode_info']['tvdb']
+            tvdb = 20017
             if tvdb in filters:
                 episode_id = (int(torrent['episode_info']['seasonnum']),
                               int(torrent['episode_info']['epnum']),

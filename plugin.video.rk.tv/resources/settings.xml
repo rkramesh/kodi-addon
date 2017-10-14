@@ -3,6 +3,8 @@
   <category label="General">
     <setting id="quality" type="enum" values="SD and HD|SD only|HD only"
              label="Quality" default="0" />
+    <setting id="tr-name" type="text"
+             label="Torrent link" />
     <setting id="itemcount" type="labelenum" values="25|50|100"
         label="The number of recent episodes" default = "50"/>
     <setting id="ignore_weak" type="bool"
