@@ -235,7 +235,7 @@ def root():
         'url': plugin.get_url(action='hdepisodes', qlty='1080p', mode='list'),
         },
        {'label': 'TamilHD-720',
-        'thumb': os.path.join(icons, 'hd.jpg'),
+        'thumb': os.path.join(icons, '720.jpg'),
         'icon': tv_icon,
         'fanart': plugin.fanart,
         'url': plugin.get_url(action='hdepisodes', qlty='720p', mode='list'),

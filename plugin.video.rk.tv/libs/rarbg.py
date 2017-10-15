@@ -41,14 +41,14 @@ def load_torrents(params):
    mdata=[]
    plugin.log_warning ('Started fetching details for '+plugin.get_setting('tr-name'))
    url=plugin.get_setting('tr-name')
-#   if params['qlty'] == 'hd':
-#      url=plugin.get_setting('tr-name')
-#   elif params['qlty'] == 'dub':
-#      url=plugin.get_setting('tr-name')
-#   elif params['qlty'] == 'dub':
-#      url=plugin.get_setting('tr-name')
-#   else:
-#      url=plugin.get_setting('tr-name')
+   if params['qlty'] == '1080':
+      tmatch=['1080']
+   elif params['qlty'] == '720':
+      tmatch=['1080']
+   elif params['qlty'] == 'all':
+      tmatch=['[']
+   else:
+      tmatch=['1080','720']
    try:
      response = requests.get(url,
                                   headers={'User-agent': 'Mozilla/5.0 (Windows NT '
@@ -66,10 +66,10 @@ def load_torrents(params):
              if rk.get('href') == None or rk.text == '':
                  pass
              elif rk.text.startswith('['):
-                  if '1080' in rk.text or '720' in rk.text:
+                  if any(tmatch in rk.text for tmatch in rk.text) :
   #                  plugin.log_warning ('   {}({})'.format(rk.text,rk['href']))
                      mdata.append(rk['href'])
-             elif rk.text ==(':q!More'):
+             elif rk.text == ('More'):
                  pass
              else:
   #              plugin.log_warning ('{}'.format(rk.text.split('[')[0]))
@@ -84,7 +84,7 @@ def load_torrents(params):
    path = os.path.join(plugin.config_dir, 'tr-torrent.db')
    conn = sqlite3.connect(path)
    cur = conn.cursor()
-   for i in mdata:
+   for i in reversed(mdata):
       tid=int(re.findall('\d+',i)[0])
       cur.execute("select id from TROCKER where tid=?", (tid,))
       duptid = cur.fetchall()
