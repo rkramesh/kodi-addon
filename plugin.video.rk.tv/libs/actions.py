@@ -244,7 +244,7 @@ def root():
         'thumb': os.path.join(icons, 'tr.jpg'),
         'icon': tv_icon,
         'fanart': plugin.fanart,
-        'url': plugin.get_url(action='episodes', qlty='all', mode='list'),
+        'url': plugin.get_url(action='hdepisodes', qlty='all', mode='list'),
         },
        {'label': '[Search torrents...]',
         'thumb': os.path.join(icons, 'search.png'),
@@ -271,6 +271,7 @@ def hdepisodes(params):
     myshows = params.get('myshows', False)
     listing = _list_torrents(
         get_torrents(params['mode'],
+                     params['qlty'],
                      search_imdb=params.get('search_imdb', ''),
                      episode_info='hd'),
         myshows=myshows)
@@ -290,6 +291,7 @@ def episodes(params):
     myshows = params.get('myshows', False)
     listing = _list_torrents(
         get_torrents(params['mode'],
+                     params['qlty'],
                      search_imdb=params.get('search_imdb', ''),
                      episode_info=myshows),
         myshows=myshows)

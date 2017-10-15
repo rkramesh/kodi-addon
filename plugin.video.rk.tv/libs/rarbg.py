@@ -40,14 +40,15 @@ def get_token():
 def load_torrents(params):
    mdata=[]
    plugin.log_warning ('Started fetching details for '+plugin.get_setting('tr-name'))
-   if params['qlty'] == 'hd':
-      url=plugin.get_setting('tr-name')
-   elif params['qlty'] == 'dub':
-      url=plugin.get_setting('tr-name')
-   elif params['qlty'] == 'dub':
-      url=plugin.get_setting('tr-name')
-   else:
-      url=plugin.get_setting('tr-name')
+   url=plugin.get_setting('tr-name')
+#   if params['qlty'] == 'hd':
+#      url=plugin.get_setting('tr-name')
+#   elif params['qlty'] == 'dub':
+#      url=plugin.get_setting('tr-name')
+#   elif params['qlty'] == 'dub':
+#      url=plugin.get_setting('tr-name')
+#   else:
+#      url=plugin.get_setting('tr-name')
    try:
      response = requests.get(url,
                                   headers={'User-agent': 'Mozilla/5.0 (Windows NT '
@@ -68,7 +69,7 @@ def load_torrents(params):
                   if '1080' in rk.text or '720' in rk.text:
   #                  plugin.log_warning ('   {}({})'.format(rk.text,rk['href']))
                      mdata.append(rk['href'])
-             elif rk.text ==('More'):
+             elif rk.text ==(':q!More'):
                  pass
              else:
   #              plugin.log_warning ('{}'.format(rk.text.split('[')[0]))
@@ -128,12 +129,18 @@ def load_torrents(params):
        for idx, col in enumerate(cursor.description):
           d[col[0].lower()] = row[idx]
        return d
-
+   print params['qlty']
    conn.row_factory = dict_factory
    cur = conn.cursor()
-   if params.get('search_string'):
+   if params.has_key('search_string'):
       cur.execute("select * from TROCKER where title like '%"+params['search_string' ]+"%'order by ID desc")
+   elif params['qlty'] == '1080p':
+      cur.execute("select * from TROCKER where title like '%"+params['qlty']+"%'order by ID desc")
+   elif params['qlty'] == '720p':
+      cur.execute("select * from TROCKER where title like '%"+params['qlty']+"%'order by ID desc")
+   elif params['qlty'] == 'all':
+      cur.execute("select * from TROCKER order by ID desc")
    else:
-     cur.execute("select * from TROCKER order by ID desc")
+      cur.execute("select * from TROCKER order by ID desc")
    rkr = cur.fetchall()
    return rkr

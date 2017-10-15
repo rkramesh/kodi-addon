@@ -200,7 +200,7 @@ def deduplicate_torrents(torrents):
     return results.itervalues()
 
 
-def get_torrents(mode, search_string='', search_imdb='', limit='', show_info=True, episode_info=False):
+def get_torrents(mode, qlty ,search_string='', search_imdb='', limit='', show_info=True,  episode_info=False):
     """
     Get recent torrents with TheTVDB data
 
@@ -226,10 +226,12 @@ def get_torrents(mode, search_string='', search_imdb='', limit='', show_info=Tru
         rarbg_query['search_string'] = search_string
     if search_imdb:
         rarbg_query['search_imdb'] = search_imdb
-    if episode_info == 'hd':
-        rarbg_query['qlty'] = 'hd'
-    elif episode_info == 'dub':
-        rarbg_query['qlty'] = 'dub'
+    if qlty == '1080p':
+        rarbg_query['qlty'] = '1080p'
+    elif qlty == '720p':
+        rarbg_query['qlty'] = '720p'
+    elif qlty == 'all':
+        rarbg_query['qlty'] = 'all'
     else:
         rarbg_query['qlty'] = 'other'
     if limit:
