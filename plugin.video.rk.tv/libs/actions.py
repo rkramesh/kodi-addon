@@ -26,7 +26,7 @@ title_regex = re.compile(r'^(.+?)\.(?:s\d+e\d+|\d+x\d+)\.', re.I)
 forbidden_chars_regex = re.compile(r'[<>:"/\\|\?\*]', re.I)
 plugin = Plugin()
 icons = os.path.join(plugin.path, 'resources', 'icons')
-tv_icon = os.path.join(icons, 'tv.png')
+tv_icon = os.path.join(icons, 'tr.jpg')
 commands = os.path.join(plugin.path, 'libs', 'commands.py')
 dialog = Dialog()
 
@@ -313,7 +313,7 @@ def search_torrents():
     results = []
     query = _enter_search_query()
     if query:
-        results = get_torrents(mode='search', search_string=query)
+        results = get_torrents(mode='search', qlty='', search_string=query)
         if not results:
             dialog.ok('Nothing found!', 'Adjust your search string and try again.')
     listing = _list_torrents(results)

@@ -129,7 +129,6 @@ def filter_torrents():
     """
     try:
         torrents = get_torrents('list', limit='50', show_info=False, episode_info=False)
-        print torrents
     except:
         addon.log_error('Failed to load torrents from rarbg.to!')
         addon.log_error(format_exc())

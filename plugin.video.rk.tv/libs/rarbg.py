@@ -59,6 +59,7 @@ def load_torrents(params):
      soup = bs4.BeautifulSoup(response.content, "html.parser")
    except:
      response.status_code == 300
+   print response.content
    if "blocked as per instructions" in response.content :
         xbmcgui.Dialog().notification('Rarbg', 'The URL has been blocked as per the instructions of Government Authority', 'error', 3000)
    if response.status_code == 200 and "blocked as per instructions" not in response.content  :
@@ -129,10 +130,12 @@ def load_torrents(params):
        for idx, col in enumerate(cursor.description):
           d[col[0].lower()] = row[idx]
        return d
-   print params['qlty']
    conn.row_factory = dict_factory
    cur = conn.cursor()
    if params.has_key('search_string'):
+      print '#'*50
+      print params
+      print '#'*50
       cur.execute("select * from TROCKER where title like '%"+params['search_string' ]+"%'order by ID desc")
    elif params['qlty'] == '1080p':
       cur.execute("select * from TROCKER where title like '%"+params['qlty']+"%'order by ID desc")
