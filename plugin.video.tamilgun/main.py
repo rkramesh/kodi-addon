@@ -196,7 +196,14 @@ def get_movies(iurl):
         items = BeautifulSoup(html, parseOnlyThese=tlink)       
         Paginator = BeautifulSoup(html, parseOnlyThese=tlink)
 
-
+        for item in items:
+            title = item.h4.text
+            url = item.find( 'div', attrs={'class' : 'btn btn-primary watch'}).find('a', href=True)['href']
+            try:
+                thumb = item.find('img')['src'].strip()
+            except:
+                thumb = _icon
+            movies.append((title, thumb, url))
 
     if 'gun' in iurl:
         html = requests.get(iurl, headers=mozhdr).text
@@ -205,28 +212,17 @@ def get_movies(iurl):
         plink = SoupStrainer('ul', {'class':'page-numbers'})
         Paginator = BeautifulSoup(html, parseOnlyThese=plink)
 
+        for item in items:
+            title = item.h3.text
+            url = item.h3.find('a')['href']
+            logging.warning("{0} {1} {0}".format ('##'*15, url))
+            try:
+                thumb = item.find('img')['src'].strip()
+            except:
+                thumb = _icon
+            movies.append((title, thumb, url))
  
-    for item in items:
-        title = item.h4.text
-        url = item.find( 'div', attrs={'class' : 'btn btn-primary watch'}).find('a', href=True)['href']
-#        url = item.find('a', onclick=True)
-        logging.warning("{0} {1} {0}".format ('##'*15, url))
-        try:
-            thumb = item.find('img')['src'].strip()
-        except:
-            thumb = _icon
-        movies.append((title, thumb, url))
-    '''    
-    for item in items:
-        title = item.h3.text
-        url = item.h3.find('a')['href']
-        logging.warning("{0} {1} {0}".format ('##'*15, url))
-        try:
-            thumb = item.find('img')['src'].strip()
-        except:
-            thumb = _icon
-        movies.append((title, thumb, url))
-   '''  
+
     if 'next' in str(Paginator):
         nextli = Paginator.find('a', {'class':re.compile('next')})
         purl = nextli.get('href')
