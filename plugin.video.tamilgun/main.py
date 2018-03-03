@@ -206,15 +206,11 @@ def get_movies(iurl):
             movies.append((title, thumb, url))
 
         if 'current' in str(Paginator):
-            nextli = Paginator.find('a')
-            purl = nextli.get('href')
+            purl = Paginator.find('span', {'class':re.compile('current')}).findNext('a')['href']
             if 'http' not in purl:
-                purl = self.bu[:-12] + purl
+                purl=url
             currpg = Paginator.find('span', {'class':re.compile('current')}).text
-            pages = Paginator.findAll('a')
-            logging.warning("{0} {1} {2} {0}".format ('##'*15, 'Pages',pages))
             lastpg = Paginator.findAll('a',text=True)[-1]
-            logging.warning("{0} {1} {2} {0}".format ('##'*15, 'lPages',lastpg))
             title = 'Next Page.. (Currently in Page %s of %s)' % (currpg,lastpg)
             movies.append((title, _icon, purl))
 
@@ -234,7 +230,6 @@ def get_movies(iurl):
             except:
                 thumb = _icon
             movies.append((title, thumb, url))
-            
         
         logging.warning("{0} {1} {2} {0}".format ('##'*15, 'Pagintor',Paginator))
         if 'next' in str(Paginator):
