@@ -1,2 +1,4 @@
 # kodi-addon
-kodi addon developed in python to watch torrents without downloading
+kodi addon developed in python , Most of them scraped from other addons and added additional functionality
+
+If plugin is unstable ,Pls Dont Blame me
