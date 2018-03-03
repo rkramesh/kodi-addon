@@ -68,7 +68,6 @@ def resolve_media(url,videos):
                   'techking.me', 'onlinemoviesworld.xyz', 'cinebix.com']
 
     if 'tamildbox' in url:
-        logging.warning("{0} {1} {0}".format ('%$resolvemedia'*15, url))
         link = requests.get(url, headers=mozhdr).text
         try:
             mlink = SoupStrainer('div', {'id':'player-embed'})
@@ -194,7 +193,8 @@ def get_movies(iurl):
         html = requests.get(iurl, headers=mozhdr).text
         tlink = SoupStrainer('div', {'class':re.compile('listbox')})
         items = BeautifulSoup(html, parseOnlyThese=tlink)       
-        Paginator = BeautifulSoup(html, parseOnlyThese=tlink)
+        plink = SoupStrainer('div', {'class':'pagination'})
+        Paginator = BeautifulSoup(html, parseOnlyThese=plink)
 
         for item in items:
             title = item.h4.text
@@ -204,6 +204,20 @@ def get_movies(iurl):
             except:
                 thumb = _icon
             movies.append((title, thumb, url))
+
+        if 'current' in str(Paginator):
+            nextli = Paginator.find('a')
+            purl = nextli.get('href')
+            if 'http' not in purl:
+                purl = self.bu[:-12] + purl
+            currpg = Paginator.find('span', {'class':re.compile('current')}).text
+            pages = Paginator.findAll('a')
+            logging.warning("{0} {1} {2} {0}".format ('##'*15, 'Pages',pages))
+            lastpg = Paginator.findAll('a',text=True)[-1]
+            logging.warning("{0} {1} {2} {0}".format ('##'*15, 'lPages',lastpg))
+            title = 'Next Page.. (Currently in Page %s of %s)' % (currpg,lastpg)
+            movies.append((title, _icon, purl))
+
 
     if 'gun' in iurl:
         html = requests.get(iurl, headers=mozhdr).text
@@ -215,25 +229,27 @@ def get_movies(iurl):
         for item in items:
             title = item.h3.text
             url = item.h3.find('a')['href']
-            logging.warning("{0} {1} {0}".format ('##'*15, url))
             try:
                 thumb = item.find('img')['src'].strip()
             except:
                 thumb = _icon
             movies.append((title, thumb, url))
- 
+            
+        
+        logging.warning("{0} {1} {2} {0}".format ('##'*15, 'Pagintor',Paginator))
+        if 'next' in str(Paginator):
+            nextli = Paginator.find('a', {'class':re.compile('next')})
+            logging.warning("{0} {1} {2} {0}".format ('##'*15, 'Pagintor',nextli))
+            purl = nextli.get('href')
+            if 'http' not in purl:
+                purl = self.bu[:-12] + purl
+            currpg = Paginator.find('span', {'class':re.compile('current')}).text
+            pages = Paginator.findAll('a', {'class':re.compile('^page')})
+            logging.warning("{0} {1} {2} {0}".format ('##'*15, 'Pages',pages))
+            lastpg = pages[len(pages)-1].text
+            title = 'Next Page.. (Currently in Page %s of %s)' % (currpg,lastpg)
+            movies.append((title, _icon, purl))
 
-    if 'next' in str(Paginator):
-        nextli = Paginator.find('a', {'class':re.compile('next')})
-        purl = nextli.get('href')
-        if 'http' not in purl:
-            purl = self.bu[:-12] + purl
-        currpg = Paginator.find('span', {'class':re.compile('current')}).text
-        pages = Paginator.findAll('a', {'class':re.compile('^page')})
-        lastpg = pages[len(pages)-1].text
-        title = 'Next Page.. (Currently in Page %s of %s)' % (currpg,lastpg)
-        movies.append((title, _icon, purl))
-   
     return movies
 
 
@@ -243,7 +259,6 @@ def get_videos(url):
     :return: list
     """
     videos = []
-    logging.warning("{0} {1} {0}".format ('%$##get_videos##'*15, url))
     if 'cinebix.com' in url:
         resolve_media(url,videos)
         return videos
