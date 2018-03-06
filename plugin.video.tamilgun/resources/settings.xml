@@ -2,5 +2,6 @@
 <settings>
 <category label="General">
 	<setting label="TamilGunURL" type="text" id="tamilgunurl" default="http://tamilgun.cool"/>
+	<setting label="TamilDboxURL" type="text" id="tamildboxurl" default="http://www.tamildbox.me/filter"/>
 </category>	
 </settings>

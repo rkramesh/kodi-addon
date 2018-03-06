@@ -31,10 +31,12 @@ _url = sys.argv[0]
 _handle = int(sys.argv[1])
 _addon = xbmcaddon.Addon()
 tamilgunurl = _addon.getSetting('tamilgunurl')
+tamildboxurl = _addon.getSetting('tamildboxurl')
 _addonname = _addon.getAddonInfo('name')
 _icon = _addon.getAddonInfo('icon')
 _fanart = _addon.getAddonInfo('fanart')
 mozhdr = {'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3'}
+#tamildboxurl='http://tamildbox.me'
 
 
 def GetSearchQuery(sitename):
@@ -171,7 +173,7 @@ def get_categories():
     for cat in cats:
         items[str(sno)+cat[1]] = cat[0]
         sno+=1
-    items[str(sno)+'[COLOR blue]TAMILDBOX[/COLOR]'] = 'http://www.tamildbox.me/movies' 
+    items[str(sno)+'[COLOR blue]TAMILDBOX[/COLOR]'] = tamildboxurl 
     sno+=1
     items[str(sno)+'[COLOR yellow]** Search **[/COLOR]'] = bu + '/?s='
         
