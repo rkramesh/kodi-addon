@@ -157,6 +157,14 @@ def resolve_media(url,videos):
 
     return
 
+def get_site_categories():
+    items = {}
+    sno = 1
+    items[str(sno)+'[COLOR blue]TAMILDBOX[/COLOR]'] = tamildboxurl 
+    sno+=1
+    items[str(sno)+'[COLOR blue]TAMILGUN[/COLOR]'] = tamilgunurl 
+    return items
+
 def get_categories():
     """
     Get the list of categories.
@@ -173,8 +181,6 @@ def get_categories():
     for cat in cats:
         items[str(sno)+cat[1]] = cat[0]
         sno+=1
-    items[str(sno)+'[COLOR blue]TAMILDBOX[/COLOR]'] = tamildboxurl 
-    sno+=1
     items[str(sno)+'[COLOR yellow]** Search **[/COLOR]'] = bu + '/?s='
         
     return items
@@ -186,12 +192,14 @@ def get_movies(iurl):
     """
     movies = []
     
+    logging.warning("{0} {1} {2} {0}".format ('##'*15, 'getmovies',iurl))
     if iurl[-3:] == '?s=':
         search_text = GetSearchQuery('TamilGun')
         search_text = urllib.quote_plus(search_text)
         iurl += search_text
 
     if 'tamildbox' in iurl:
+        logging.warning("{0} {1} {2} {0}".format ('##'*15, 'dbox-iurl',iurl))
         html = requests.get(iurl, headers=mozhdr).text
         tlink = SoupStrainer('div', {'class':re.compile('listbox')})
         items = BeautifulSoup(html, parseOnlyThese=tlink)       
@@ -207,6 +215,7 @@ def get_movies(iurl):
                 thumb = _icon
             movies.append((title, thumb, url))
 
+        logging.warning("{0} {1} {2} {0}".format ('##'*15, 'dbox-Pagintor',Paginator))
         if 'current' in str(Paginator):
             purl = Paginator.find('span', {'class':re.compile('current')}).findNext('a')['href']
             if 'http' not in purl:
@@ -218,6 +227,10 @@ def get_movies(iurl):
 
 
     if 'gun' in iurl:
+        if iurl == tamilgunurl:
+            list_categories(iurl)
+
+        logging.warning("{0} {1} {2} {0}".format ('##'*15, 'tgun-iurl',iurl))
         html = requests.get(iurl, headers=mozhdr).text
         mlink = SoupStrainer('article', {'class':re.compile('video')})
         items = BeautifulSoup(html, parseOnlyThese=mlink)
@@ -233,7 +246,7 @@ def get_movies(iurl):
                 thumb = _icon
             movies.append((title, thumb, url))
         
-        logging.warning("{0} {1} {2} {0}".format ('##'*15, 'Pagintor',Paginator))
+        logging.warning("{0} {1} {2} {0}".format ('##'*15, 'tgun-Pagintor',Paginator))
         if 'next' in str(Paginator):
             nextli = Paginator.find('a', {'class':re.compile('next')})
             logging.warning("{0} {1} {2} {0}".format ('##'*15, 'Pagintor',nextli))
@@ -313,11 +326,16 @@ def get_videos(url):
     return videos
 
 
-def list_categories():
+def list_categories(iurl):
     """
     Create the list of categories in the Kodi interface.
     """
-    categories = get_categories()
+    
+    logging.warning("{0} {1} {2} {0}".format ('##'*15, 'list_cate',iurl))
+    if iurl == tamilgunurl:
+        categories = get_categories()
+    else:
+        categories = get_site_categories()
     listing = []
     for title,iurl in sorted(categories.iteritems()):
         list_item = xbmcgui.ListItem(label=title[1:])
@@ -432,7 +450,7 @@ def router(paramstring):
         elif params['action'] == 'play':
             play_video(params['video'])
     else:
-        list_categories()
+        list_categories(iurl='test')
 
 
 if __name__ == '__main__':
